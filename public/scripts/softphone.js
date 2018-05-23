@@ -513,12 +513,15 @@ SP.functions.attachVoiceMailButton = function(conn)
             Twilio.Device.connect(params);
     }
     function startCall(response) { 
-            alert('Inside Start Call()');
+            console.log('Inside Start Call()');
             var result = JSON.parse(response.result); 
             callerPhoneNumber = cleanFormatting(result.number);
             var objId = result.objectId;
-            sforce.interaction.runApex('CallerIdController', 'getCallerId', '"objectId="+objId+"' , SP.functions.callStartCall);
-
+            //sforce.interaction.runApex('CallerIdController', 'getCallerId', '"objectId="+objId+"' , SP.functions.callStartCall);
+            sforce.interaction.setVisible(true);  
+            var  params = {"PhoneNumber": callerPhoneNumber, "CallerId": '3019005961'};
+           console.log('Params before calling connect()'+JSON.stringify(params));
+            Twilio.Device.connect(params);
     } 
 
     var saveLogcallback = function (response) {
