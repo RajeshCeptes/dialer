@@ -509,6 +509,7 @@ SP.functions.attachVoiceMailButton = function(conn)
 
             //alert("cleanednumber = " + cleanednumber);  
            var  params = {"PhoneNumber": callerPhoneNumber, "CallerId": response.result};
+           console.log('Params before calling connect()'+JSON.stringify(params));
             Twilio.Device.connect(params);
     }
     function startCall(response) { 
