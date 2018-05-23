@@ -513,7 +513,7 @@ SP.functions.attachVoiceMailButton = function(conn)
             Twilio.Device.connect(params);
     }
     function startCall(response) { 
-            
+            alert('Inside Start Call()');
             var result = JSON.parse(response.result); 
             callerPhoneNumber = cleanFormatting(result.number);
             var objId = result.objectId;
