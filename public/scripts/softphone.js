@@ -501,17 +501,22 @@ SP.functions.attachVoiceMailButton = function(conn)
         }
 
 
-    function startCall(response) { 
-            
-            //called onClick2dial
-            sforce.interaction.setVisible(true);  //pop up CTI console
-            var result = JSON.parse(response.result);  
-            var cleanednumber = cleanFormatting(result.number);
+    var callerPhoneNumber ='';
+    SP.functions.callStartCall = function(response) {
 
+      //called onClick2dial
+            sforce.interaction.setVisible(true);  //pop up CTI console
 
             //alert("cleanednumber = " + cleanednumber);  
-            params = {"PhoneNumber": cleanednumber, "CallerId": $("#callerid-entry > input").val()};
+           var  params = {"PhoneNumber": callerPhoneNumber, "CallerId": response.result};
             Twilio.Device.connect(params);
+    }
+    function startCall(response) { 
+            
+            var result = JSON.parse(response.result); 
+            callerPhoneNumber = cleanFormatting(result.number);
+            var objId = result.objectId;
+            sforce.interaction.runApex('CallerIdController', 'getCallerId', '"objectId="+objId+"' , SP.functions.callStartCall);
 
     } 
 
