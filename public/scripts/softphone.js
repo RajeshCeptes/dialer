@@ -502,7 +502,7 @@ SP.functions.attachVoiceMailButton = function(conn)
 
 
     var callerPhoneNumber ='';
-    SP.functions.callStartCall = function(response) {
+    var callStartCall = function(response) {
 
       //called onClick2dial
             sforce.interaction.setVisible(true);  //pop up CTI console
@@ -517,11 +517,8 @@ SP.functions.attachVoiceMailButton = function(conn)
             var result = JSON.parse(response.result); 
             callerPhoneNumber = cleanFormatting(result.number);
             var objId = result.objectId;
-            //sforce.interaction.runApex('CallerIdController', 'getCallerId', '"objectId="+objId+"' , SP.functions.callStartCall);
-            sforce.interaction.setVisible(true);  
-            var  params = {"PhoneNumber": callerPhoneNumber, "CallerId": '3019005961'};
-           console.log('Params before calling connect()'+JSON.stringify(params));
-            Twilio.Device.connect(params);
+            sforce.interaction.runApex('CallerIdRetrivalService', 'getCallerId', 'contactId='+objId , callStartCall);
+            
     } 
 
     var saveLogcallback = function (response) {
