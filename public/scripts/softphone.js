@@ -210,20 +210,20 @@ $(function() {
  // ---- VoiceMail --------- //
 SP.functions.attachVoiceMailButton = function(conn) 
 {
-	$("#action-buttons > button.voicemail").click(function() 
-	{
-		//alert("Voicemail Functionality");
-		//alert("CallSID------"+conn.parameters.CallSid);
-		//alert("callerid------"+conn.parameters.From);
-		//console.log("Voicemail Functionality");
-		//alert("ABOUT TO POST--VOICEMAIL----");
-		
-		//console.log("ABOUT TO POST--VOICEMAIL----");
-		$.post("/voicemail", {"callsid":conn.parameters.CallSid,"MachineDetection":"Enable","calid":$("#callerid-entry > input").val()}, function(data) 
-		{
-			alert("POST--VOICEMAIL----");
-		});
-	});
+  $("#action-buttons > button.voicemail").click(function() 
+  {
+    //alert("Voicemail Functionality");
+    //alert("CallSID------"+conn.parameters.CallSid);
+    //alert("callerid------"+conn.parameters.From);
+    //console.log("Voicemail Functionality");
+    //alert("ABOUT TO POST--VOICEMAIL----");
+    
+    //console.log("ABOUT TO POST--VOICEMAIL----");
+    $.post("/voicemail", {"callsid":conn.parameters.CallSid,"MachineDetection":"Enable","calid":$("#callerid-entry > input").val()}, function(data) 
+    {
+      alert("POST--VOICEMAIL----");
+    });
+  });
 }
 // ---- VoiceMail --------- //
      SP.functions.attachUnHold = function(conn, holdid) {
@@ -251,7 +251,7 @@ SP.functions.attachVoiceMailButton = function(conn)
            $("#agent-status").removeClass();
            $("#agent-status").addClass("ready");
            $('#softphone').removeClass('incoming');
-	      
+        
        }
 
       if (statusCategory == "notReady") {
@@ -400,7 +400,7 @@ SP.functions.attachVoiceMailButton = function(conn)
         SP.currentCall = conn;
         SP.functions.attachMuteButton(conn);
         SP.functions.attachHoldButton(conn, SP.calltype);
-	SP.functions.attachVoiceMailButton(conn);
+  SP.functions.attachVoiceMailButton(conn);
 
         //send status info
         $.post("/track", { "from":SP.username, "status":"OnCall" }, function(data) {
@@ -501,24 +501,18 @@ SP.functions.attachVoiceMailButton = function(conn)
         }
 
 
-    var callerPhoneNumber ='';
-    var callStartCall = function(response) {
-
-      //called onClick2dial
+    function startCall(response) { 
+            
+            //called onClick2dial
             sforce.interaction.setVisible(true);  //pop up CTI console
+            var result = JSON.parse(response.result);  
+            var cleanednumber = cleanFormatting(result.number);
+
 
             //alert("cleanednumber = " + cleanednumber);  
-           var  params = {"PhoneNumber": callerPhoneNumber, "CallerId": response.result};
-           console.log('Params before calling connect()'+JSON.stringify(params));
+            params = {"PhoneNumber": cleanednumber, "CallerId": $("#callerid-entry > input").val()};
             Twilio.Device.connect(params);
-    }
-    function startCall(response) { 
-            console.log('Inside Start Call()');
-            var result = JSON.parse(response.result); 
-            callerPhoneNumber = cleanFormatting(result.number);
-            var objId = result.objectId;
-            sforce.interaction.runApex('CallerIdRetrivalService', 'getCallerId', 'contactId='+objId , callStartCall);
-            
+
     } 
 
     var saveLogcallback = function (response) {
